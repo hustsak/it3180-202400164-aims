@@ -1,0 +1,33 @@
+BÀI 5
+
+1. Ưu và nhược điểm của Upstream First (sửa ở master trước) so với Release First (sửa ở release trước)?
+
+Release First:
+
+- Ưu điểm: Giúp khắc phục nhanh các sự cố nghiêm trọng trên môi trường Production. Chỉ cần sửa lỗi trên nhánh release đang được phát hành, tránh ảnh hưởng từ những thay đổi mới chưa ổn định trên master.
+- Nhược điểm: Cần lan truyền bản sửa lỗi sang các nhánh phát triển khác bằng cherry-pick hoặc merge. Nếu quên thực hiện, lỗi có thể xuất hiện trở lại trong các phiên bản sau.
+
+Upstream First:
+
+- Ưu điểm: Bản sửa lỗi được đưa vào nhánh phát triển chính trước, giúp các phiên bản tương lai kế thừa bản vá và giảm nguy cơ bỏ sót khi cập nhật mã nguồn.
+- Nhược điểm: Có thể khó áp dụng khi master chứa nhiều thay đổi chưa ổn định hoặc cấu trúc mã nguồn khác biệt đáng kể so với phiên bản đang phát hành. Việc đưa bản sửa sang release có thể cần cherry-pick và xử lý xung đột.
+
+Kết luận: Release First phù hợp khi cần khắc phục sự cố Production khẩn cấp, còn Upstream First phù hợp khi ưu tiên đưa bản sửa vào dòng phát triển chính trước.
+
+2. Nếu quên lan truyền bản sửa sang release/lab05, lệnh nào ở Phần F sẽ phát hiện?
+
+Có thể sử dụng lệnh:
+
+git cherry -v origin/main origin/release/lab05
+
+Lệnh này so sánh các thay đổi tương ứng giữa hai nhánh và hiển thị những commit chưa được áp dụng tương đương trên nhánh đích. Commit có dấu + cho biết chưa tìm thấy thay đổi tương đương; dấu - cho biết đã có thay đổi tương đương.
+
+Lưu ý: Lệnh trên chỉ hữu ích khi main là nhánh chứa bản sửa và release/lab05 là nhánh cần nhận bản sửa. Cần bảo đảm các nhánh remote đã được cập nhật bằng git fetch trước khi kiểm tra.
+
+Ngoài ra, có thể kiểm tra một commit cụ thể bằng:
+
+git branch -a --contains <FIX_SHA>
+
+Lệnh này liệt kê các nhánh chứa commit FIX_SHA. Nếu release/lab05 không xuất hiện trong kết quả, commit đó chưa được tích hợp trực tiếp vào nhánh này.
+
+Lưu ý: Nếu bản sửa được cherry-pick, commit mới sẽ có SHA khác. Vì vậy, git branch --contains không phát hiện được bản sửa tương đương có SHA khác; trong trường hợp đó, git cherry hữu ích hơn.
