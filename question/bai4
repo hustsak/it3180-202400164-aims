@@ -1,0 +1,57 @@
+BÀI 4: RELEASE FLOW, GITFLOW VÀ SEMANTIC VERSIONING
+
+1. Vì sao không merge ngược từ release/* vào master?
+
+- Định hướng luồng mã nguồn (Upstream Direction): Trong mô hình Release Flow của học phần, master là nhánh phát triển chính. Các công việc chuẩn bị cho bản phát hành như cập nhật phiên bản, viết CHANGELOG và sửa lỗi đều được thực hiện và hợp nhất vào master trước khi tạo nhánh release/*.
+
+- Tránh các commit merge không cần thiết: Nhánh release/* được tạo từ master khi mã nguồn đã sẵn sàng phát hành, nhằm cố định trạng thái mã nguồn (baseline) để đánh tag hoặc nộp bài. Nếu nhánh release/* không chứa thay đổi mới cần đưa trở lại master, việc merge ngược là không cần thiết và có thể làm lịch sử Git phức tạp hơn.
+
+Kết luận: Không merge ngược từ release/* vào master khi nhánh release không có thay đổi mới cần cập nhật vào nhánh chính.
+
+2. So sánh Release Flow (trong học phần) với GitFlow
+
+2.1. Cấu trúc nhánh dài hạn (Long-lived Branches)
+
+- Release Flow: Chỉ sử dụng một nhánh chính là master. Các tính năng và bản sửa lỗi được phát triển trên các nhánh phù hợp rồi hợp nhất về master.
+
+- GitFlow: Duy trì hai nhánh dài hạn là main và develop. Nhánh main lưu trữ trạng thái mã nguồn đã phát hành, còn develop là nhánh tích hợp các tính năng đang phát triển.
+
+2.2. Luồng phát hành (Release Workflow)
+
+- Release Flow: Nhánh release/* được tạo trực tiếp từ master khi dự án sẵn sàng phát hành. Nhánh này dùng để cố định mã nguồn, đánh tag và chuẩn bị nộp hoặc phát hành sản phẩm. Thông thường, không cần merge ngược nếu không có thay đổi mới.
+
+- GitFlow: Nhánh release/* được tạo từ develop. Sau khi hoàn tất việc chuẩn bị phát hành, nhánh này được merge vào main để phát hành và đánh tag, đồng thời merge về develop để cập nhật các chỉnh sửa trong quá trình release.
+
+2.3. Độ phức tạp và tần suất phát hành (Complexity and Release Cadence)
+
+- Release Flow: Có quy trình đơn giản, ít nhánh dài hạn và dễ tích hợp với CI/CD. Phù hợp với các dự án phát hành thường xuyên, chẳng hạn hằng ngày hoặc hằng tuần.
+
+- GitFlow: Có quy trình quản lý nhánh phức tạp hơn nhưng hỗ trợ tổ chức các giai đoạn phát triển và bảo trì nhiều phiên bản. Phù hợp với các dự án có chu kỳ phát hành rõ ràng và cần quản lý phiên bản chặt chẽ.
+
+Kết luận: Release Flow ưu tiên sự đơn giản và tốc độ phát hành, trong khi GitFlow phân chia rõ ràng hơn giữa quá trình phát triển và phát hành.
+
+3. Vì sao phiên bản được nâng thẳng lên 1.0.0 thay vì 0.4.0?
+
+3.1. Ý nghĩa của Semantic Versioning (SemVer)
+
+Theo quy tắc Semantic Versioning, phiên bản có cấu trúc:
+
+MAJOR.MINOR.PATCH
+
+- MAJOR: Tăng khi có thay đổi không tương thích ngược.
+- MINOR: Tăng khi bổ sung tính năng mới nhưng vẫn tương thích ngược.
+- PATCH: Tăng khi sửa lỗi tương thích ngược.
+
+Các phiên bản 0.y.z thường được sử dụng trong giai đoạn phát triển ban đầu. Theo SemVer, API ở giai đoạn này chưa được xem là ổn định.
+
+3.2. Đánh dấu cột mốc sản phẩm ổn định (Stable Release Baseline)
+
+Trong phạm vi học phần, đến Lab 04, dự án đã hoàn thiện các tính năng cốt lõi như xem giỏ hàng, tìm kiếm, tính giảm giá, xử lý các trường hợp giới hạn, sắp xếp và kiểm thử đơn vị (unit testing).
+
+Nếu dự án được xác định đã đạt trạng thái ổn định và sẵn sàng phát hành phiên bản chính thức, việc nâng phiên bản lên 1.0.0 thể hiện cột mốc quan trọng này.
+
+Ngược lại, phiên bản 0.4.0 chỉ thể hiện một bản cập nhật MINOR trong giai đoạn phát triển trước 1.0.0.
+
+Kết luận: Dự án nâng lên 1.0.0 để đánh dấu phiên bản ổn định đầu tiên, thay vì tiếp tục sử dụng 0.4.0 cho giai đoạn phát triển ban đầu.
+
+Lưu ý: Theo SemVer, việc phát hành 1.0.0 nên dựa trên cam kết về tính ổn định và khả năng tương thích của sản phẩm, không chỉ dựa vào số lượng tính năng hoặc unit test.
